@@ -217,6 +217,23 @@ Content-Type: application/json
 }
 ```
 
+#### Get My Profile (Protected)
+```http
+GET /auth/my-profile
+Authorization: Bearer <jwt_token>
+```
+
+#### Update My Profile (Protected)
+```http
+PUT /auth/my-profile
+Authorization: Bearer <jwt_token>
+Content-Type: application/json
+
+{
+  "email": "updated@example.com"
+}
+```
+
 ### Products Endpoints
 
 #### Get All Products
@@ -294,7 +311,7 @@ CREATE TABLE products (
 ### Users Table
 ```sql
 CREATE TABLE users (
-  id INT PRIMARY KEY AUTO_INCREMENT,
+  id VARCHAR(36) PRIMARY KEY,
   email VARCHAR(255) NOT NULL UNIQUE,
   password VARCHAR(255) NOT NULL,
   createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -338,6 +355,10 @@ src/
 │   ├── products.module.ts
 │   └── product.entity.ts
 ├── users/               # Users module
+│   ├── dto/             # Data Transfer Objects
+│   ├── controllers/     # Controllers
+│   │   └── authentication/
+│   │       └── authentication.controller.ts
 │   ├── user.entity.ts
 │   ├── users.controller.ts
 │   ├── users.service.ts
@@ -362,9 +383,13 @@ src/
 ├── products/
 │   ├── products.service.spec.ts    # Unit tests for service
 │   └── products.controller.spec.ts # Integration tests for controller
-└── auth/
-    ├── auth.service.spec.ts        # Unit tests for auth service
-    └── auth.controller.spec.ts     # Integration tests for auth controller
+├── auth/
+│   ├── auth.service.spec.ts        # Unit tests for auth service
+│   └── auth.controller.spec.ts     # Integration tests for auth controller
+└── users/
+    └── controllers/
+        └── authentication/
+            └── authentication.controller.spec.ts
 ```
 
 ## 🔐 Security Features
@@ -405,6 +430,13 @@ pm2 start dist/main.js --name "products-api"
   "category": "Electronics",
   "createdAt": "2024-01-15T10:30:00.000Z",
   "updatedAt": "2024-01-15T10:30:00.000Z"
+}
+```
+
+### Successful Login
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
 }
 ```
 
